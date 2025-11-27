@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>비밀 일기장</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 메인 화면 (달력 + 목록) -->
+    <div class="app-container" id="main-view">
+        <!-- 상단 헤더 -->
+        <header class="app-header">
+            <button class="menu-btn" id="menu-btn">☰</button>
+            <div class="header-center">
+                <span class="current-time" id="current-time">오전 12:24</span>
+                <span class="current-month" id="current-month">11월 2일</span>
+            </div>
+            <div class="header-right">
+            </div>
+        </header>
+
+        <!-- 달력 영역 -->
+        <div class="calendar-container">
+            <div class="calendar-weekdays">
+                <div>일</div>
+                <div>월</div>
+                <div>화</div>
+                <div>수</div>
+                <div>목</div>
+                <div>금</div>
+                <div>토</div>
+            </div>
+            <div class="calendar-grid" id="calendar-grid">
+                <!-- 날짜들이 동적으로 추가됩니다 -->
+            </div>
+        </div>
+
+        <!-- 일기 목록 섹션 -->
+        <div class="diary-list-section">
+            <div class="diary-entry-card" id="selected-entry-card">
+                <div class="entry-date-header">
+                    <span class="entry-date" id="entry-date">11월 1일 (토)</span>
+                </div>
+                <div class="entry-locked-content">
+                    <span class="lock-icon-small">🔒</span>
+                    <span class="lock-text-small">비밀번호를 입력하여 내용을 확인하세요</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 상세 보기 화면 -->
+    <div class="app-container detail-view" id="detail-view" style="display: none;">
+        <!-- 상단 헤더 -->
+        <header class="app-header">
+            <button class="menu-btn" id="menu-btn-detail">☰</button>
+            <div class="header-center">
+                <span class="current-time" id="detail-time">오전 12:25</span>
+            </div>
+            <div class="header-right">
+            </div>
+        </header>
+
+        <!-- 일기 작성 영역 (참고문서 기반) -->
+        <div class="diary-write-section">
+            <div class="diary-header">
+                <input 
+                    type="text" 
+                    class="diary-title" 
+                    id="diary-title-input"
+                    value="제목"
+                    placeholder="제목을 입력하세요"
+                >
+                <div class="diary-date-display" id="diary-date-display">📅 날짜</div>
+            </div>
+            
+            <!-- 비밀번호 입력 및 해제 -->
+            <div class="password-unlock-section">
+                <input 
+                    type="password" 
+                    id="diary-password-input" 
+                    class="diary-password-input"
+                    placeholder="비밀번호를 입력하세요"
+                    autocomplete="off"
+                >
+                <button class="unlock-btn" id="unlock-btn">🔓 해제</button>
+            </div>
+            
+            <!-- 일기 작성 영역 -->
+            <div class="diary-textarea-container">
+                <textarea 
+                    id="diary-textarea" 
+                    class="diary-textarea"
+                    placeholder="일기 작성 영역 — 기본 잠금 상태 🔒"
+                    readonly
+                ></textarea>
+            </div>
+            
+            <!-- 버튼 영역 (참고문서: 저장, 초기화만) -->
+            <div class="diary-button-group">
+                <button class="diary-btn save-btn" id="diary-save-btn">💾 저장</button>
+                <button class="diary-btn reset-btn" id="diary-reset-btn">🔄 초기화</button>
+            </div>
+            
+            <!-- 전체 삭제 버튼 -->
+            <div class="delete-all-section">
+                <button class="diary-btn delete-all-btn" id="delete-all-btn">🗑️ 전체 삭제</button>
+            </div>
+            
+            <!-- 상태 메시지 영역 -->
+            <div class="message-area" id="message-area"></div>
+        </div>
+    </div>
+
+    <!-- 더보기 메뉴 모달 -->
+    <div class="modal-overlay" id="menu-modal">
+        <div class="menu-modal-content">
+            <div class="menu-options">
+                <button class="menu-option-btn" id="calendar-menu-btn">
+                    <div class="menu-icon-only">😊</div>
+                </button>
+                <button class="menu-option-btn" id="write-menu-btn">
+                    <div class="menu-icon-only">✏️</div>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 캘린더 뷰 화면 -->
+    <div class="app-container calendar-view" id="calendar-view" style="display: none;">
+        <header class="app-header">
+            <button class="menu-btn" id="menu-btn-calendar">☰</button>
+            <div class="header-center">
+                <button class="month-nav-btn" id="prev-month-btn">←</button>
+                <span class="calendar-month-year" id="calendar-month-year">11월 2025</span>
+                <button class="month-nav-btn" id="next-month-btn">→</button>
+            </div>
+            <div class="header-right">
+            </div>
+        </header>
+        
+        <div class="mood-calendar-container">
+            <div class="mood-calendar-weekdays">
+                <div>일</div>
+                <div>월</div>
+                <div>화</div>
+                <div>수</div>
+                <div>목</div>
+                <div>금</div>
+                <div>토</div>
+            </div>
+            <div class="mood-calendar-grid" id="mood-calendar-grid">
+                <!-- 날짜들이 동적으로 추가됩니다 -->
+            </div>
+        </div>
+
+        <!-- 기분 선택 모달 -->
+        <div class="modal-overlay" id="mood-select-modal">
+            <div class="mood-modal-content">
+                <div class="mood-modal-header">
+                    <h2>오늘 기분은 어떤가요?</h2>
+                    <button class="modal-close" id="close-mood-modal-btn">✕</button>
+                </div>
+                <div class="mood-grid">
+                    <button class="mood-emoji-btn" data-mood="😌">😌</button>
+                    <button class="mood-emoji-btn" data-mood="🥰">🥰</button>
+                    <button class="mood-emoji-btn" data-mood="😲">😲</button>
+                    <button class="mood-emoji-btn" data-mood="🤩">🤩</button>
+                    <button class="mood-emoji-btn" data-mood="😰">😰</button>
+                    <button class="mood-emoji-btn" data-mood="😢">😢</button>
+                    <button class="mood-emoji-btn" data-mood="🤒">🤒</button>
+                    <button class="mood-emoji-btn" data-mood="😊">😊</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="script.js"></script>
+</body>
+</html>
